@@ -1,17 +1,22 @@
 #include <GL/freeglut.h>
 #include <math.h>
+#include <stdbool.h>
 
 #define PI 3.14159265
 
 GLuint squareList; // display list
 
+float scaleFactor = 1.0f;
+float scaleStep = 0.01f; // πόσο αυξάνεται/μειώνεται κάθε frame
 float rotationAngle = 0.1f;
+bool scalingUp = true;
 
 void drawCube()
 {
     glPushMatrix();
-    glTranslatef(0, 0, -100); // μεταφέρει όλον τον κύβο στο (0, 0, -100)
+    glTranslatef(0, 0, -100);          // μεταφέρει όλον τον κύβο στο (0, 0, -100)
     glRotatef(rotationAngle, 1, 1, 1); // περιστροφή γύρω από άξονα (vx, vy, vz)
+    glScalef(scaleFactor, scaleFactor, scaleFactor); // ομαλή αυξομείωση μεγέθους
 
     // TODO change length to 7
     // TODO comments
@@ -128,10 +133,28 @@ void update(int value)
     if (rotationAngle >= 360.0f)
         rotationAngle -= 360.0f;
 
+    if (scalingUp)
+    {
+        scaleFactor += scaleStep;
+        if (scaleFactor >= 2.0f)
+        {
+            scaleFactor = 2.0f;
+            scalingUp = false;
+        }
+    }
+    else
+    {
+        scaleFactor -= scaleStep;
+        if (scaleFactor <= 1.0f)
+        {
+            scaleFactor = 1.0f;
+            scalingUp = true;
+        }
+    }
+
     glutPostRedisplay();          // ζητά νέα σχεδίαση
     glutTimerFunc(16, update, 0); // επαναλαμβάνει μετά από ~16ms (~60 FPS)
 }
-
 
 void display()
 {
@@ -144,7 +167,6 @@ void display()
     drawCube();
     glutSwapBuffers(); // double buffering
 }
-
 
 int main(int argc, char **argv)
 {
