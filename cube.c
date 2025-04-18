@@ -100,11 +100,11 @@ void init()
     squareList = glGenLists(1);
     glNewList(squareList, GL_COMPILE); // Ξεκινάμε την εγγραφή εντολών μέσα στη συγκεκριμένη display list. Το GL_COMPILE σημαίνει "κατασκεύασέ την τώρα για μελλοντική χρήση".
 
-    glBegin(GL_QUADS);      
-    glVertex3f(1, 1, 1);   
-    glVertex3f(1, 1, -1);   
-    glVertex3f(-1, -1, 1); 
-    glVertex3f(-1, -1, -1); 
+    glBegin(GL_QUADS);      // σχεδιαση τετραπλευρου
+    glVertex3f(1, 1, 1);    // κορυφή 1
+    glVertex3f(1, 1, -1);   // κορυφή 2
+    glVertex3f(-1, -1, -1); // κορυφή 3
+    glVertex3f(-1, -1, 1);  // κορυφή 4
     glEnd();
 
     glEndList();
