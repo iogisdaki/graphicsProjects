@@ -5,13 +5,16 @@
 
 GLuint squareList; // display list
 
-float camAngle = 0.0f; // γωνία κάμερας σε μοίρες
+float rotationAngle = 0.1f;
 
 void drawCube()
 {
     glPushMatrix();
     glTranslatef(0, 0, -100); // μεταφέρει όλον τον κύβο στο (0, 0, -100)
+    glRotatef(rotationAngle, 1, 1, 1); // περιστροφή γύρω από άξονα (vx, vy, vz)
+
     // TODO change length to 7
+    // TODO comments
 
     // front face
     glPushMatrix();
@@ -70,7 +73,7 @@ void drawCube()
     // glScalef(halfEdge, halfEdge, 1);
     glCallList(squareList);
     glPopMatrix();
-    
+
     glPopMatrix();
 }
 
@@ -119,33 +122,29 @@ void init()
     glEndList();
 }
 
+void update(int value)
+{
+    rotationAngle += 1.0f;
+    if (rotationAngle >= 360.0f)
+        rotationAngle -= 360.0f;
+
+    glutPostRedisplay();          // ζητά νέα σχεδίαση
+    glutTimerFunc(16, update, 0); // επαναλαμβάνει μετά από ~16ms (~60 FPS)
+}
+
+
 void display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Καθαρίζει την οθόνη (χρώμα + βάθος) ώστε να ξεκινήσει νέα σχεδίαση κάθε φορά που καλείται η display().
     glLoadIdentity();
 
-    float radius = 20.0f;
-    float camX = radius * sin(camAngle * PI / 180.0f);
-    float camZ = radius * cos(camAngle * PI / 180.0f);
-
-    // ορισμος καμερας
-    // Κινείται κυκλικά γύρω από τον κύβο
-    gluLookAt(camX, 10, camZ - 100, 0, 0, -100, 0, 1, 0);
-    // glRotatef(45, 1, 1, 1); // περιστροφή και ως προς τον z για πιο "στριμμένη" γωνία
+    // ορισμος σταθερής κάμερας
+    gluLookAt(30, 20, 50, 0, 0, -100, 0, 1, 0);
     drawAxes(10);
     drawCube();
     glutSwapBuffers(); // double buffering
 }
 
-void update(int value)
-{
-    camAngle += 1.0f;
-    if (camAngle >= 360.0f)
-        camAngle -= 360.0f;
-
-    glutPostRedisplay();          // ζητά επανασχεδίαση
-    glutTimerFunc(16, update, 0); // επανάκληση ~60 FPS
-}
 
 int main(int argc, char **argv)
 {
@@ -165,7 +164,7 @@ int main(int argc, char **argv)
 
     init();
     glutDisplayFunc(display);
-    glutTimerFunc(0, update, 0); // ξεκινάμε το animation
+    glutTimerFunc(0, update, 0); // ξεκινάει το animation
     glutMainLoop();
     return 0;
 }
