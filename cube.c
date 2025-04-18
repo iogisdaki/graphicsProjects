@@ -2,6 +2,92 @@
 
 GLuint squareList; // display list
 
+void drawCube()
+{
+    float halfEdge = 7 / 2.0f; // Μισή ακμή του κύβου
+
+    // front face
+    glPushMatrix();
+    glTranslatef(0, 0, halfEdge);
+    glRotatef(45, 0, 0, 1);  // "ξεστραβώνει" το τετράγωνο από το x=y προς XY
+    glColor3f(1.0, 0.0, 0.0); // κόκκινη
+    glScalef(halfEdge, halfEdge, 1);
+    glCallList(squareList);
+    glPopMatrix();
+
+    // back face
+    glPushMatrix();
+    glTranslatef(0, 0, -halfEdge);
+    glRotatef(45, 0, 0, 1);  // "ξεστραβώνει" το τετράγωνο από το x=y προς XY
+    glColor3f(0.0, 1.0, 0.0); // πράσινη
+    glScalef(halfEdge, halfEdge, 1);
+    glCallList(squareList);
+    glPopMatrix();
+
+    // above face
+    glPushMatrix();
+    glTranslatef(0, halfEdge, 0);
+    glRotatef(90, 1, 0, 0);
+    glRotatef(45, 0, 0, 1);  // "ξεστραβώνει" το τετράγωνο από το x=y προς XY
+    glColor3f(0.0, 0.0, 1.0); // μπλε
+    glScalef(halfEdge, halfEdge, 1);
+    glCallList(squareList);
+    glPopMatrix();
+
+    // below face
+    glPushMatrix();
+    glTranslatef(0, -halfEdge, 0);
+    glRotatef(90, 1, 0, 0);
+    glRotatef(45, 0, 0, 1);  // "ξεστραβώνει" το τετράγωνο από το x=y προς XY
+    glColor3f(1.0, 1.0, 0.0); // κίτρινη
+    glScalef(halfEdge, halfEdge, 1);
+    glCallList(squareList);
+    glPopMatrix();
+
+    // right face
+    glPushMatrix();
+    glTranslatef(halfEdge, 0, 0);
+    glRotatef(90, 0, 1, 0);
+    glRotatef(45, 0, 0, 1);  // "ξεστραβώνει" το τετράγωνο από το x=y προς XY
+    glColor3f(1.0, 0.0, 1.0); // μωβ
+    glScalef(halfEdge, halfEdge, 1);
+    glCallList(squareList);
+    glPopMatrix();
+
+    // left face
+    glPushMatrix();
+    glTranslatef(-halfEdge, 0, 0);
+    glRotatef(90, 0, 1, 0);
+    glRotatef(45, 0, 0, 1);  // "ξεστραβώνει" το τετράγωνο από το x=y προς XY
+    glColor3f(0.0, 1.0, 1.0); // γαλάζια
+    glScalef(halfEdge, halfEdge, 1);
+    glCallList(squareList);
+    glPopMatrix();
+}
+
+void drawAxes(float length)
+{
+    glLineWidth(2.0f);
+    glBegin(GL_LINES);
+
+    // X - κόκκινος
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0, 0, 0);
+    glVertex3f(length, 0, 0);
+
+    // Y - πράσινος
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0, 0, 0);
+    glVertex3f(0, length, 0);
+
+    // Z - μπλε
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(0, 0, 0);
+    glVertex3f(0, 0, length);
+
+    glEnd();
+}
+
 void init()
 {
     glMatrixMode(GL_PROJECTION);
@@ -14,12 +100,11 @@ void init()
     squareList = glGenLists(1);
     glNewList(squareList, GL_COMPILE); // Ξεκινάμε την εγγραφή εντολών μέσα στη συγκεκριμένη display list. Το GL_COMPILE σημαίνει "κατασκεύασέ την τώρα για μελλοντική χρήση".
 
-    glColor3f(1.0, 0.0, 0.0);
-    glBegin(GL_QUADS);      // σχεδιαση τετραπλευρου
-    glVertex3f(1, 1, 1);    // κορυφή 1
-    glVertex3f(1, 1, -1);   // κορυφή 2
-    glVertex3f(-1, -1, -1); // κορυφή 3
-    glVertex3f(-1, -1, 1);  // κορυφή 4
+    glBegin(GL_QUADS);      
+    glVertex3f(1, 1, 1);   
+    glVertex3f(1, 1, -1);   
+    glVertex3f(-1, -1, 1); 
+    glVertex3f(-1, -1, -1); 
     glEnd();
 
     glEndList();
@@ -33,9 +118,10 @@ void display()
     // Βρίσκεται στο σημείο (0, 0, 6)
     // Κοιτάζει προς το (0, 0, 0)
     // Το "πάνω" της είναι προς τον άξονα y (δηλαδή κάθετα)
-    gluLookAt(0, 0, 10, 0, 0, 0, 0, 1, 0);
-    glRotatef(45, 1, 1, 0);                // μετά εφαρμόζεις περιστροφή
-    glCallList(squareList);
+    gluLookAt(10, 0, 20, 0, 0, 0, 0, 1, 0);
+    // glRotatef(45, 1, 1, 1); // περιστροφή και ως προς τον z για πιο "στριμμένη" γωνία
+    drawAxes(10);
+    drawCube();
     glutSwapBuffers(); // double buffering
 }
 
