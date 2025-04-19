@@ -14,8 +14,8 @@ bool scalingUp = true;
 void drawCube()
 {
     glPushMatrix();
-    glTranslatef(0, 0, -100);          // μεταφέρει όλον τον κύβο στο (0, 0, -100)
-    glRotatef(rotationAngle, 1, 1, 1); // περιστροφή γύρω από άξονα (vx, vy, vz)
+    glTranslatef(0, 0, -100);                        // μεταφέρει όλον τον κύβο στο (0, 0, -100)
+    glRotatef(rotationAngle, 1, 1, 1);               // περιστροφή γύρω από άξονα (vx, vy, vz)
     glScalef(scaleFactor, scaleFactor, scaleFactor); // ομαλή αυξομείωση μεγέθους
 
     // TODO change length to 7
@@ -117,11 +117,13 @@ void init()
     squareList = glGenLists(1);
     glNewList(squareList, GL_COMPILE); // Ξεκινάμε την εγγραφή εντολών μέσα στη συγκεκριμένη display list. Το GL_COMPILE σημαίνει "κατασκεύασέ την τώρα για μελλοντική χρήση".
 
+    float r = 1.0f / sqrtf(2.0f);
+
     glBegin(GL_QUADS);
-    glVertex3f(1, 1, 1);
-    glVertex3f(1, 1, -1);
-    glVertex3f(-1, -1, -1);
-    glVertex3f(-1, -1, 1);
+    glVertex3f(r, r, 1);
+    glVertex3f(r, r, -1);
+    glVertex3f(-r, -r, -1);
+    glVertex3f(-r, -r, 1);
     glEnd();
 
     glEndList();
